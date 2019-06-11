@@ -84,10 +84,20 @@ if(isset($_GET["openid"]) && isset($_GET["data"])){
             }
         }
     }else{
-        header("Location:" . $GATEWAY["systemurl"]);
+        echo('
+        <div id="wximg" class="wx" style="width:100%;margin: 0 auto;text-align:center">
+            <img id="wximgpay" style="width:75%;" src="' . $GATEWAY["systemurl"] . 'modules/gateways/weixin/image/illegal.png" border=0>
+        </div>
+        ');
+        echo('</br>错误：安全检查失败');
     }
 }else{
-    header("Location:" . $GATEWAY["systemurl"]);
+    echo('
+    <div id="wximg" class="wx" style="width:100%;margin: 0 auto;text-align:center">
+        <img id="wximgpay" style="width:75%;" src="' . $GATEWAY["systemurl"] . 'modules/gateways/weixin/image/illegal.png" border=0>
+    </div>
+    ');
+    echo('</br>错误：参数缺失');
 }
 
 function jsapi_weixin_safetyCheck($getSign = "", $vars = array(  ), $get = false, $timestamp)
