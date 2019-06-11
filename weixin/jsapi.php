@@ -4,10 +4,9 @@ require_once "Eshanghu_jsAPI.php";
 require_once(__DIR__ . "/../../../init.php");
 require_once(__DIR__ . "/../../../includes/gatewayfunctions.php");
 require_once(__DIR__ . "/../../../includes/invoicefunctions.php");
-$sysdata = explode("?openid=", $_GET["data"]);
 $GATEWAY = getGatewayVariables("weixin");
-if(isset($sysdata[0]) && isset($sysdata[1])){
-    $dataarr = json_decode(base64_decode($sysdata[0]), true);
+if(isset($_GET["openid"]) && isset($_GET["data"])){
+    $dataarr = json_decode(base64_decode($_GET["data"]), true);
     if(!is_array($dataarr)){
         header("Location:" . $GATEWAY["systemurl"]);
         die();
@@ -33,7 +32,7 @@ if(isset($sysdata[0]) && isset($sysdata[1])){
                 $wxconfig['app_secret'] = $GATEWAY['app_secret'];
                 $wxconfig['notify'] = $GATEWAY["systemurl"] . "modules/gateways/weixin/notify.php";
                 $eshanghu = new Eshanghu_jsAPI($wxconfig);
-                $result = $eshanghu->create(mt_rand(10000, 99999) . $invoiceid, $body, $total, $sysdata[1]);
+                $result = $eshanghu->create(mt_rand(10000, 99999) . $invoiceid, $body, $total, $_GET["openid"]);
                 if($result["code"] == 200)
                 {   
                     echo('
@@ -80,6 +79,7 @@ if(isset($sysdata[0]) && isset($sysdata[1])){
                         <img id="wximgpay" style="width:75%;" src="' . $GATEWAY["systemurl"] . 'modules/gateways/weixin/image/illegal.png" border=0>
                     </div>
                     ');
+                    echo('</br>错误代码：' . $result["code"] . '</br>错误详情：' . $result["message"]);
                 }
             }
         }

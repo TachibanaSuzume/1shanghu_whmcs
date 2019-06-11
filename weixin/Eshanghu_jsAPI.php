@@ -19,8 +19,8 @@ class Eshanghu_jsAPI {
     * @param string $url
     *
     */
-    public function getOpenIDUrl($url){
-        return "https://1shanghu.com/wechat/login?return_url=" . $url;
+    public function getOpenIDUrl($url, $appkey, $sub_mch_id){
+        return "https://1shanghu.com/v2/wechat/login?app_key=" . $appkey . "&sub_mch_id=" . $sub_mch_id . "&callback=" . $url;
     }
 
     /**

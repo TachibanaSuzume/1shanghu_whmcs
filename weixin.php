@@ -55,7 +55,7 @@ function weixin_link($params)
         "tamp" => $timestamp,
         "sign" => weixin_safetyCheck("", array( $invoiceid ), true, $timestamp),
     );
-    $openidurl = $systemurl . "modules/gateways/weixin/jsapi.php?data=" . base64_encode(json_encode($dataarr));
+    $openidurl = $systemurl . "modules/gateways/weixin/jsapi.php?data=" . str_replace("=", "", base64_encode(json_encode($dataarr)));
     $param['body'] = $companyname . "-" . $invoiceid;
     $param['out_trade_no'] = $invoiceid;
     $param['total_fee'] = $amount * 100;
@@ -64,10 +64,10 @@ function weixin_link($params)
     $detect = new Mobile_Detect;
     if($detect->isMobile()){
         $eshanghu = new Eshanghu_jsAPI($wxconfig);
-        $openidurl = $eshanghu->getOpenIDUrl($openidurl);
+        $openidurl = $eshanghu->getOpenIDUrl($openidurl, $params['app_key'], $params['mch_id']);
         $code = '
         <div id="wximg" class="wx" style="max-width: 230px;margin: 0 auto">
-            <img alt="模式二扫码支付" src="' . $systemurl . 'modules/gateways/weixin/qrcode.php?data=' . $openidurl . '" style="width:100%;height:100%;"/>
+            <img alt="模式二扫码支付" src="' . $systemurl . 'modules/gateways/weixin/qrcode.php?data=' . urlencode($openidurl) . '" style="width:100%;height:100%;"/>
             <a class="wx" href="weixin://scan">
                 <img style="width:100%;height:100%;" src="' . $systemurl . 'modules/gateways/weixin/image/jsapi_pay_before.png" border=0>
             </a>
