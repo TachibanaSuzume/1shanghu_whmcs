@@ -1,5 +1,5 @@
 # 1shanghu_whmcs
-易商户 native+jsapi whmcs支付插件
+易商户 native+jsapi whmcs支付插件  
 已更换v2的openid获取接口
 
 ## 使用方法
