@@ -53,20 +53,21 @@ if($status == 'PAID' ) {
 	$paidcurrencyid =  $currency_data[0]->id;
 
 	$result = select_query("tblinvoices", "", array( "id" => $invoiceid ));
-
-	$userid = $result->userid;
-	$currency = getCurrency( $userid );
-	
-	if ($paidcurrencyid != $currency['id']) {
-		$amount = convertCurrency( $amount, $paidcurrencyid, $currency['id'] );
-		$fee = convertCurrency( $fee, $paidcurrencyid, $currency['id'] );
+	if($result->status != "Paid"){
+		$userid = $result->userid;
+		$currency = getCurrency( $userid );
+		
+		if ($paidcurrencyid != $currency['id']) {
+			$amount = convertCurrency( $amount, $paidcurrencyid, $currency['id'] );
+			$fee = convertCurrency( $fee, $paidcurrencyid, $currency['id'] );
+		}
+		
+		$invoiceid = checkCbInvoiceID($invoiceid, $GATEWAY["name"]); # Checks invoice ID is a valid invoice number or ends processing
+		// checkCbTransID($transid); # Checks transaction number isn't already in the database and ends processing if it does
+		addInvoicePayment($invoiceid, $transid, $amount, $fee, $gatewaymodule);
+		logTransaction($GATEWAY["name"], $_GET,"Successful");
+		echo 'success';
 	}
-	
-	$invoiceid = checkCbInvoiceID($invoiceid, $GATEWAY["name"]); # Checks invoice ID is a valid invoice number or ends processing
-	// checkCbTransID($transid); # Checks transaction number isn't already in the database and ends processing if it does
-	addInvoicePayment($invoiceid, $transid, $amount, $fee, $gatewaymodule);
-	logTransaction($GATEWAY["name"], $_GET,"Successful");
-	echo 'success';
 }
 
 ?>
